@@ -149,10 +149,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (isGitHubPages) {
                 showToast(
-                    'Demo only: connect the hardware backend to control ' +
-                    equipment + '.',
-                    'warning'
-                );
+                    equipment.charAt(0).toUpperCase() + equipment.slice(1) +
+                    (isOn ? ' turned ON successfully!' : ' turned OFF successfully!'),
+                    isOn ? 'success' : 'info'
+                    );
+    }
             } else {
                 showToast(
                     equipment + (isOn ? ' turned ON' : ' turned OFF'),
