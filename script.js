@@ -6,9 +6,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const contactForm = document.getElementById('contact-form');
     const powerOffBtn = document.getElementById('powerOffBtn');
 
-    // GitHub Pages does not provide ESP32 API routes.
+    // GitHub Pages hosts static files; it does not provide ESP32 API routes.
     const isGitHubPages = window.location.hostname.endsWith('github.io');
 
+    // Map equipment names to the existing ESP32 routes.
     const deviceRoutes = {
         fan: 'fan',
         light: 'light',
@@ -17,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
         machine: 'machine'
     };
 
+    // Toast notifications
     function showToast(message, type = 'info') {
         if (!toastContainer) {
             console.log(message);
@@ -31,6 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
         setTimeout(() => toast.remove(), 4000);
     }
 
+    // Send equipment commands when a hardware backend is available.
     async function sendEquipmentCommand(route, action) {
         if (isGitHubPages) {
             showToast(
@@ -52,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Equipment toggle controls.
+    // Equipment toggle controls
     toggleInputs.forEach((input, index) => {
         input.addEventListener('change', function () {
             const card = controlCards[index];
@@ -60,6 +63,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const equipment = card.dataset.equipment;
             const route = deviceRoutes[equipment];
+
             if (!route) return;
 
             const isOn = this.checked;
@@ -67,7 +71,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (isGitHubPages) {
                 showToast(
-                    'Demo only: connect the hardware backend to control ' + equipment + '.',
+                    'Demo only: connect the hardware backend to control ' +
+                    equipment + '.',
                     'warning'
                 );
             } else {
@@ -81,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Power off all equipment.
+    // Power off all equipment
     if (powerOffBtn) {
         powerOffBtn.addEventListener('click', function () {
             toggleInputs.forEach((input, index) => {
@@ -110,7 +115,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Read live sensor values only when a backend is available.
+    // Read live sensor values only when a hardware backend is available.
     async function updateSensors() {
         if (isGitHubPages) return;
 
@@ -139,6 +144,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    // Disable sensor polling on GitHub Pages.
     if (!isGitHubPages) {
         updateSensors();
         setInterval(updateSensors, 3000);
@@ -148,15 +154,20 @@ document.addEventListener('DOMContentLoaded', function () {
         );
     }
 
-    // EmailJS contact form.
+    // EmailJS contact form
     if (contactForm) {
+
         if (typeof emailjs === 'undefined') {
             console.error('EmailJS SDK did not load.');
+
             showToast(
                 'Email service could not load. Please refresh and try again.',
                 'error'
             );
+
         } else {
+
+            // Initialize EmailJS with Public Key
             emailjs.init({
                 publicKey: 'vJOcMT4YjG5Ed7Xq3'
             });
@@ -178,9 +189,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
 
                 try {
+
+                    // Send contact form using EmailJS
                     await emailjs.sendForm(
                         'service_ykog2wp',
-                        'template_g0huaz',
+                        'template_g0huazr',
                         contactForm
                     );
 
@@ -192,11 +205,14 @@ document.addEventListener('DOMContentLoaded', function () {
                     contactForm.reset();
 
                 } catch (error) {
+
+                    // Display detailed EmailJS error
                     console.error('EmailJS status:', error && error.status);
                     console.error('EmailJS details:', error && error.text);
                     console.error('Full EmailJS error:', error);
 
-                    const details = error && (error.text || error.message);
+                    const details = error &&
+                        (error.text || error.message);
 
                     showToast(
                         'Unable to send email' +
@@ -205,6 +221,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     );
 
                 } finally {
+
                     if (submitButton) {
                         submitButton.disabled = false;
                         submitButton.textContent = originalButtonText;
