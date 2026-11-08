@@ -537,10 +537,46 @@ html {
     scroll-behavior: smooth;
 }
 
-/* Keep page sections visible.
-   The current JavaScript does not add the .visible class. */
+/* Keep all page sections visible. */
 section {
     opacity: 1;
     transform: translateY(0);
     transition: opacity 0.6s ease, transform 0.6s ease;
 }
+
+/* Frontend-only demo login screen */
+body.auth-locked { overflow: hidden; }
+body.auth-locked > :not(#loginScreen) { display: none !important; }
+.login-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    background: linear-gradient(135deg, rgba(15, 32, 74, .96), rgba(30, 58, 138, .88)), url('images/home.jpeg') center/cover no-repeat;
+    font-family: 'Roboto', sans-serif;
+}
+.login-panel {
+    width: 100%; max-width: 440px; padding: 2.5rem;
+    background: #fff; border-radius: 18px; text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,.25);
+}
+.login-brand-icon { color: #2563eb; font-size: 2.5rem; margin-bottom: .75rem; }
+.login-eyebrow { color: #2563eb; font-size: .75rem; font-weight: 700; letter-spacing: .18em; }
+.login-panel h1 { color: #172554; font-family: 'Montserrat', sans-serif; margin: .5rem 0; }
+.login-subtitle { color: #64748b; margin-bottom: 1.5rem; }
+.login-form { text-align: left; }
+.login-form label { display: block; color: #334155; font-weight: 600; margin: .9rem 0 .4rem; }
+.login-form input { width: 100%; padding: .9rem 1rem; border: 1px solid #cbd5e1; border-radius: 9px; font: inherit; outline: none; }
+.login-form input:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,.13); }
+.password-wrap { position: relative; }
+.password-wrap input { padding-right: 3rem; }
+.password-toggle { position: absolute; right: .8rem; top: 50%; transform: translateY(-50%); border: 0; background: transparent; color: #64748b; cursor: pointer; font-size: 1rem; }
+.login-button { width: 100%; margin-top: 1.3rem; padding: .95rem; border: 0; border-radius: 9px; background: #2563eb; color: #fff; font-size: 1rem; font-weight: 700; cursor: pointer; }
+.login-button:hover { background: #1d4ed8; }
+.login-error { min-height: 1.2rem; margin-top: .6rem; color: #dc2626; font-size: .9rem; }
+.demo-credentials { margin-top: 1.3rem; padding: .8rem; background: #eff6ff; border-radius: 8px; color: #1e40af; font-size: .9rem; }
+.login-disclaimer { margin-top: 1rem; color: #94a3b8; font-size: .75rem; }
+.logout-button { margin-left: 1.5rem; padding: .45rem .9rem; border: 1px solid rgba(255,255,255,.65); border-radius: 20px; background: transparent; color: #fff; cursor: pointer; }
+.logout-button:hover { background: rgba(255,255,255,.15); }
+@media (max-width: 480px) { .login-panel { padding: 1.7rem 1.3rem; } }
