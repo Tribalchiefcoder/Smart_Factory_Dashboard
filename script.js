@@ -1,15 +1,87 @@
 
 document.addEventListener('DOMContentLoaded', function () {
+    // DEMO LOGIN ONLY: credentials are visible in client-side code.
+    const DEMO_USERNAME = 'admin';
+    const DEMO_PASSWORD = 'factory123';
+
+    const loginForm = document.getElementById('loginForm');
+    const loginError = document.getElementById('loginError');
+    const loginScreen = document.getElementById('loginScreen');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const passwordInput = document.getElementById('loginPassword');
+    const togglePassword = document.getElementById('togglePassword');
+
+    function unlockDashboard() {
+        document.body.classList.remove('auth-locked');
+        if (loginScreen) loginScreen.style.display = 'none';
+    }
+
+    if (sessionStorage.getItem('smartFactoryDemoLoggedIn') === 'true') {
+        unlockDashboard();
+    }
+
+    // Login functionality
+    if (loginForm) {
+        loginForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = passwordInput.value;
+
+            if (username === DEMO_USERNAME && password === DEMO_PASSWORD) {
+                sessionStorage.setItem('smartFactoryDemoLoggedIn', 'true');
+
+                if (loginError) loginError.textContent = '';
+
+                unlockDashboard();
+            } else if (loginError) {
+                loginError.textContent =
+                    'Incorrect username or password. Please try again.';
+            }
+        });
+    }
+
+    // Show / hide password
+    if (togglePassword && passwordInput) {
+        togglePassword.addEventListener('click', function () {
+            const show = passwordInput.type === 'password';
+
+            passwordInput.type = show ? 'text' : 'password';
+
+            togglePassword.innerHTML = show
+                ? '<i class="fas fa-eye-slash"></i>'
+                : '<i class="fas fa-eye"></i>';
+
+            togglePassword.setAttribute(
+                'aria-label',
+                show ? 'Hide password' : 'Show password'
+            );
+        });
+    }
+
+    // Logout functionality
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function () {
+            sessionStorage.removeItem('smartFactoryDemoLoggedIn');
+
+            document.body.classList.add('auth-locked');
+
+            if (loginScreen) loginScreen.style.display = 'flex';
+            if (loginForm) loginForm.reset();
+        });
+    }
+
     const toggleInputs = document.querySelectorAll('.toggle-input');
     const controlCards = document.querySelectorAll('.control-card');
     const toastContainer = document.getElementById('toastContainer');
     const contactForm = document.getElementById('contact-form');
     const powerOffBtn = document.getElementById('powerOffBtn');
 
-    // GitHub Pages hosts static files; it does not provide ESP32 API routes.
-    const isGitHubPages = window.location.hostname.endsWith('github.io');
+    // GitHub Pages does not provide ESP32 API routes.
+    const isGitHubPages =
+        window.location.hostname.endsWith('github.io');
 
-    // Map equipment names to the existing ESP32 routes.
+    // Equipment routes
     const deviceRoutes = {
         fan: 'fan',
         light: 'light',
@@ -18,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function () {
         machine: 'machine'
     };
 
-    // Toast notifications
+    // Toast notification
     function showToast(message, type = 'info') {
         if (!toastContainer) {
             console.log(message);
@@ -28,12 +100,13 @@ document.addEventListener('DOMContentLoaded', function () {
         const toast = document.createElement('div');
         toast.className = 'toast ' + type;
         toast.textContent = message;
+
         toastContainer.appendChild(toast);
 
         setTimeout(() => toast.remove(), 4000);
     }
 
-    // Send equipment commands when a hardware backend is available.
+    // Send equipment command
     async function sendEquipmentCommand(route, action) {
         if (isGitHubPages) {
             showToast(
@@ -51,7 +124,10 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         } catch (error) {
             console.error('Equipment command error:', error);
-            showToast('Could not reach the hardware controller.', 'error');
+            showToast(
+                'Could not reach the hardware controller.',
+                'error'
+            );
         }
     }
 
@@ -59,6 +135,7 @@ document.addEventListener('DOMContentLoaded', function () {
     toggleInputs.forEach((input, index) => {
         input.addEventListener('change', function () {
             const card = controlCards[index];
+
             if (!card) return;
 
             const equipment = card.dataset.equipment;
@@ -67,6 +144,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!route) return;
 
             const isOn = this.checked;
+
             card.classList.toggle('on', isOn);
 
             if (isGitHubPages) {
@@ -81,7 +159,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     isOn ? 'success' : 'info'
                 );
 
-                sendEquipmentCommand(route, isOn ? 'on' : 'off');
+                sendEquipmentCommand(
+                    route,
+                    isOn ? 'on' : 'off'
+                );
             }
         });
     });
@@ -115,7 +196,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Read live sensor values only when a hardware backend is available.
+    // Update sensor values
     async function updateSensors() {
         if (isGitHubPages) return;
 
@@ -123,7 +204,9 @@ document.addEventListener('DOMContentLoaded', function () {
             const response = await fetch('/sensor');
 
             if (!response.ok) {
-                throw new Error('Sensor API returned HTTP ' + response.status);
+                throw new Error(
+                    'Sensor API returned HTTP ' + response.status
+                );
             }
 
             const data = await response.json();
@@ -138,13 +221,11 @@ document.addEventListener('DOMContentLoaded', function () {
             if (humidity && data.humidity !== undefined) {
                 humidity.textContent = data.humidity + '%';
             }
-
         } catch (error) {
             console.error('Sensor fetch error:', error);
         }
     }
 
-    // Disable sensor polling on GitHub Pages.
     if (!isGitHubPages) {
         updateSensors();
         setInterval(updateSensors, 3000);
@@ -156,18 +237,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // EmailJS contact form
     if (contactForm) {
-
         if (typeof emailjs === 'undefined') {
-            console.error('EmailJS SDK did not load.');
+            console.error(
+                'EmailJS SDK did not load. Check the EmailJS script tag.'
+            );
 
             showToast(
                 'Email service could not load. Please refresh and try again.',
                 'error'
             );
-
         } else {
-
-            // Initialize EmailJS with Public Key
             emailjs.init({
                 publicKey: 'vJOcMT4YjG5Ed7Xq3'
             });
@@ -189,8 +268,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
 
                 try {
-
-                    // Send contact form using EmailJS
                     await emailjs.sendForm(
                         'service_ykog2wp',
                         'template_g0huazr',
@@ -205,8 +282,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     contactForm.reset();
 
                 } catch (error) {
-
-                    // Display detailed EmailJS error
                     console.error('EmailJS status:', error && error.status);
                     console.error('EmailJS details:', error && error.text);
                     console.error('Full EmailJS error:', error);
@@ -221,7 +296,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     );
 
                 } finally {
-
                     if (submitButton) {
                         submitButton.disabled = false;
                         submitButton.textContent = originalButtonText;
