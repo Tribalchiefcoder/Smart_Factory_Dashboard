@@ -8,8 +8,11 @@
   <a href="https://tribalchiefcoder.github.io/Smart_Factory_Dashboard/">
     <img src="https://img.shields.io/badge/Live%20Demo-Visit%20Website-blue?style=for-the-badge&logo=github" alt="Live Demo">
   </a>
-  <a href="https://doi.org/10.56726/IRJMETS95600">
-    <img src="https://img.shields.io/badge/Research%20Paper-Published-success?style=for-the-badge" alt="Published Research Paper">
+  <a href="docs/researchpaper.pdf">
+    <img src="https://img.shields.io/badge/Research%20Paper-View%20PDF-success?style=for-the-badge" alt="Research Paper">
+  </a>
+  <a href="docs/PROJECT_REPORT.pdf">
+    <img src="https://img.shields.io/badge/Project%20Report-View%20PDF-orange?style=for-the-badge" alt="Project Report">
   </a>
 
 </p>
@@ -29,11 +32,9 @@ The project aims to reduce manual intervention, improve operational efficiency, 
 ## 🌐 Live Website
 
 <p align="center">
-
   <a href="https://tribalchiefcoder.github.io/Smart_Factory_Dashboard/">
     <img src="https://img.shields.io/badge/OPEN%20LIVE%20WEBSITE-Click%20Here-2ea44f?style=for-the-badge&logo=github" alt="Open Website">
   </a>
-
 </p>
 
 **Website:** https://tribalchiefcoder.github.io/Smart_Factory_Dashboard/
@@ -178,12 +179,11 @@ Our project research paper has been published in the:
 | Particular | Details |
 |---|---|
 | Paper Title | Smart Factory IoT Dashboard with Equipment Control |
-| Journal | IRJMETS |
+| Journal | International Research Journal of Modernization in Engineering Technology and Science |
 | Volume | 08 |
 | Issue | 04 |
 | Publication Month | April 2026 |
 | e-ISSN | 2582-5208 |
-| DOI | [10.56726/IRJMETS95600](https://doi.org/10.56726/IRJMETS95600) |
 
 ### Authors
 
@@ -193,7 +193,7 @@ Our project research paper has been published in the:
 4. Sanket Tatyaso Balanna
 5. Vinayak D. Chavan
 
-**Published Research Paper:** [View Research Paper](https://doi.org/10.56726/IRJMETS95600)
+📄 **[Read the Published Research Paper](docs/researchpaper.pdf)**
 
 ---
 
@@ -201,15 +201,11 @@ Our project research paper has been published in the:
 
 The following documents are part of our final-year project:
 
-- 📘 **Project Report:** `docs/PROJECT_REPORT.pdf`
-- 📑 **Published Research Paper:** `docs/researchpaper.pdf`
-- 🖼️ **Project Poster:** `docs/Poster_Majorproject.pdf`
-
-Once these files are uploaded to the `docs` folder, access them here:
-
-- [View Project Report](docs/PROJECT_REPORT.pdf)
-- [View Published Research Paper](docs/researchpaper.pdf)
-- [View Project Poster](docs/Poster_Majorproject.pdf)
+| Document | Link |
+|---|---|
+| Project Report | [View PDF](docs/PROJECT_REPORT.pdf) |
+| Published Research Paper | [View PDF](docs/researchpaper.pdf) |
+| Project Poster | [View PDF](docs/Poster_Majorproject.pdf) |
 
 ---
 
