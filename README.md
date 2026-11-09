@@ -110,43 +110,52 @@ The proposed system consists of five major units:
 4. **Cloud Unit:** Firebase Realtime Database stores and synchronizes system information.
 5. **User Interface Unit:** The web dashboard displays sensor readings and provides equipment controls.
 
-### Working Flow
 
-```text
-       DHT11 Sensor       IR Sensor
-             │                │
-             └───────┬────────┘
-                     │
-                     ▼
-                ESP32 DevKit
-                     │
-                   Wi-Fi
-                     │
-                     ▼
-          Firebase Realtime Database
-                     │
-                     ▼
-               Web Dashboard
-                     │
-              Control Commands
-                     │
-                     ▼
-          Firebase Realtime Database
-                     │
-                     ▼
-                ESP32 DevKit
-                     │
-                     ▼
-             4-Channel Relay
-                     │
-          ┌──────────┼──────────┐
-          ▼          ▼          ▼
-         Fan       Light    Conveyor Motor
+### Working Flow Diagram
 
-                     Buzzer
+The system follows two main communication paths:
+
+1. **Monitoring:** Sensors send data to the ESP32, which processes it and uploads it to Firebase. The web dashboard retrieves and displays the sensor readings.
+2. **Equipment Control:** Users send ON/OFF commands through the dashboard. These commands are stored in Firebase, retrieved by the ESP32, and executed through the relay module.
+
+```mermaid
+flowchart TD
+    A["Power Supply"] --> B["ESP32 DevKit V1"]
+
+    subgraph INPUT["Input / Sensing Unit"]
+        C["DHT11 Sensor<br/>Temperature & Humidity"]
+        D["IR Sensor<br/>Object Detection"]
+    end
+
+    C --> B
+    D --> B
+
+    B <-->|"Wi-Fi Communication"| E[("Firebase Realtime Database")]
+
+    E -->|"Sensor Readings"| F["Web Dashboard"]
+    F -->|"ON / OFF Commands"| E
+
+    B -->|"Control Signals"| G["4-Channel Relay Module"]
+
+    subgraph OUTPUT["Output / Equipment Unit"]
+        H["Fan"]
+        I["LED Light"]
+        J["Conveyor Motor"]
+        K["Buzzer"]
+    end
+
+    G --> H
+    G --> I
+    G --> J
+    G --> K
+
+    style A fill:#64748b,color:#fff
+    style B fill:#2563eb,color:#fff
+    style E fill:#f59e0b,color:#000
+    style F fill:#16a34a,color:#fff
+    style G fill:#7c3aed,color:#fff
 ```
 
----
 
 ## 📸 Project Screenshots
 
